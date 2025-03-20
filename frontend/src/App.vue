@@ -99,7 +99,7 @@ export default {
     },
     async addTodo() {
       if (this.newTask.trim()) {
-        const newTodo = { id: Date.now(), task: this.newTask, completed: false };
+        const newTodo = {  task: this.newTask, completed: false };
         try {
           const response = await axios.post("http://127.0.0.1:8000/todos", newTodo);
           this.todos.push(response.data);
