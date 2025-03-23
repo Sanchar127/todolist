@@ -30,7 +30,7 @@
             @click="deleteTodo(todo.id)"
             class="btn-delete py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
           >
-            Delete
+            Deletes
           </button>
         </div>
       </li>

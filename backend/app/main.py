@@ -2,7 +2,8 @@ from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import create_engine, Column, Integer, String, Boolean
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine, Column, Integer, VARCHAR, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoResultFound
@@ -21,7 +22,7 @@ app.add_middleware(
 )
 
 # MySQL connection details
-DATABASE_URL = os.getenv("DATABASE_URL", "mysql+pymysql://myuser:mypassword@mysql-container/tododb")
+DATABASE_URL = os.getenv("DATABASE_URL","mysql+pymysql://myuser:mypassword@mysql:3306/tododb")
 
 
 # Database connection and ORM setup
@@ -34,7 +35,7 @@ class TodoItem(Base):
     __tablename__ = "todos"
     
     id = Column(Integer, primary_key=True, index=True)
-    task = Column(String, index=True)
+    task = Column(VARCHAR(length=150), index=True)
     completed = Column(Boolean, default=False)
 
 # Create the tables if they don't exist
