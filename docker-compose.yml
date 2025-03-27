@@ -1,5 +1,27 @@
+version: '3.8'
 
 services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: tododb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    ports:
+      - "3306:3306"  # Expose MySQL port
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - todo_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
   frontend:
     build:
       context: .
@@ -16,30 +38,14 @@ services:
     ports:
       - "8000:8000"  # Adjust based on your backend config
     depends_on:
-      - mysql  # Ensure backend starts after MySQL
+      mysql:
+        condition: service_healthy  # Ensures backend starts only when MySQL is ready
     volumes:
       - ./backend/app:/app
     networks:
       - todo_network
     environment:
-      DATABASE_URL: "mysql+pymysql://myuser:mypassword@mysql:3306/tododb"  # Change 'mydb' to 'tododb'
-
-
-  mysql:
-    image: mysql:latest
-    container_name: mysql-container
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: tododb
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
-    ports:
-      - "3306:3306"  # Expose MySQL port
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - todo_network
+      DATABASE_URL: "mysql+pymysql://myuser:mypassword@mysql:3306/tododb" 
 
 networks:
   todo_network:
@@ -47,3 +53,4 @@ networks:
 
 volumes:
   mysql_data:
+    driver: local 

@@ -91,7 +91,7 @@ export default {
   methods: {
     async fetchTodos() {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/todos");
+        const response = await axios.get("http://localhost:8000/todos");
         this.todos = response.data;
       } catch (error) {
         console.error("Error fetching todos:", error);
@@ -101,7 +101,7 @@ export default {
       if (this.newTask.trim()) {
         const newTodo = {  task: this.newTask, completed: false };
         try {
-          const response = await axios.post("http://127.0.0.1:8000/todos", newTodo);
+          const response = await axios.post("http://localhost:8000/todos", newTodo);
           this.todos.push(response.data);
           this.newTask = ""; // Reset the input field
         } catch (error) {
@@ -114,7 +114,7 @@ export default {
       if (todo) {
         todo.completed = !todo.completed;
         try {
-          await axios.put(`http://127.0.0.1:8000/todos/${todoId}`, todo);
+          await axios.put(`http://localhost:8000/todos/${todoId}`, todo);
         } catch (error) {
           console.error("Error updating todo:", error);
         }
@@ -122,7 +122,7 @@ export default {
     },
     async deleteTodo(todoId) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/todos/${todoId}`);
+        await axios.delete(`http://localhost:8000/todos/${todoId}`);
         this.todos = this.todos.filter(todo => todo.id !== todoId);
       } catch (error) {
         console.error("Error deleting todo:", error);
